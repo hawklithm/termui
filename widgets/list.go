@@ -9,7 +9,7 @@ import (
 
 	rw "github.com/mattn/go-runewidth"
 
-	. "github.com/gizak/termui/v3"
+	. "github.com/hawklithm/termui"
 )
 
 type List struct {
