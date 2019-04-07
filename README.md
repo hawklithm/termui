@@ -24,8 +24,8 @@ package main
 import (
 	"log"
 
-	ui "github.com/gizak/termui/v3"
-	"github.com/gizak/termui/v3/widgets"
+	ui "github.com/hawklithm/termui"
+	"github.com/hawklithm/termui/widgets"
 )
 
 func main() {
