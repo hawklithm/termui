@@ -7,10 +7,11 @@
 package main
 
 import (
-	"log"
-
 	ui "github.com/hawklithm/termui"
 	"github.com/hawklithm/termui/widgets"
+	"image/png"
+	"log"
+	"net/http"
 )
 
 func main() {
@@ -40,10 +41,20 @@ func main() {
 		item.Text = s
 		z = append(z, item)
 	}
+	resp, err := http.Get("https://raw.githubusercontent.com/ichinaski/pxl/master/img/gh.png")
+	if err != nil {
+		log.Fatalf("failed to fetch image: %v", err)
+	}
+	img, err := png.Decode(resp.Body)
+	if err != nil {
+		log.Fatalf("failed to decode fetched image: %v", err)
+	}
+
+	z[2].Img = img
 	l.Rows = z
 	l.TextStyle = ui.NewStyle(ui.ColorYellow)
 	l.WrapText = false
-	l.SetRect(0, 0, 25, 24)
+	l.SetRect(0, 0, 25, 40)
 
 	ui.Render(l)
 

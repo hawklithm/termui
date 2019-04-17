@@ -49,11 +49,62 @@ func NewImageList() *ImageList {
 }
 
 func (self *ImageListItem) GetHeight() int {
-	rows := strings.Split(self.Text, "\n")
-	return len(rows) + 2
+	if self.Img == nil {
+		rows := strings.Split(self.Text, "\n")
+		return len(rows) + 2
+	} else {
+		_, height, _, _ := self.calcImageSize()
+		return height + 2
+	}
 
 }
-func (self *ImageListItem) Draw(buf *Buffer, selected bool) {
+
+func (self *ImageListItem) calcImageSize() (width, height int, imgScale, whratio float64) {
+	if self.Img == nil {
+		return -1, -1, -1, 0
+	}
+	img := self.Img
+	width = 40
+	height = 40
+	whratio = DefaultRatio
+
+	bounds := img.Bounds()
+	imgW, imgH := bounds.Dx(), bounds.Dy()
+
+	imgScale = Scale(imgW, imgH, width, height, whratio)
+
+	// Resize canvas to fit scaled image
+	width, height = int(float64(imgW)/imgScale), int(float64(imgH)/(imgScale*whratio))
+	return width, height, imgScale, whratio
+}
+
+func (self *ImageListItem) drawImage(buf *Buffer) {
+	img := self.Img
+	width, height, imgScale, whratio := self.calcImageSize()
+
+	for y := 0; y < height; y++ {
+		for x := 0; x < width; x++ {
+			// Calculate average color for the corresponding image rectangle
+			// fitting in this cell. We use a half-block trick, wherein the
+			// lower half of the cell displays the character ▄, effectively
+			// doubling the resolution of the canvas.
+			startX, startY, endX, endY := ImgArea(x, y, imgScale, whratio)
+
+			r, g, b := AvgRGB(img, startX, startY, endX, (startY+endY)/2)
+			colorUp := Color(TermColor(r, g, b))
+
+			r, g, b = AvgRGB(img, startX, (startY+endY)/2, endX, endY)
+			colorDown := Color(TermColor(r, g, b))
+
+			buf.SetCell(Cell{Rune: '▄', Style: Style{Fg: colorDown - 1,
+				Bg: colorUp - 1}}, image.Point{X: x, Y: y}.Add(self.Inner.Min))
+
+			//termbox.SetCell(x, y, '▄', colorDown, colorUp)
+		}
+	}
+}
+
+func (self *ImageListItem) draw(buf *Buffer, selected bool) {
 
 	if selected {
 		self.Border = true
@@ -132,7 +183,11 @@ func (self *ImageList) Draw(buf *Buffer) {
 		height := self.Rows[row].GetHeight()
 		self.Rows[row].SetRect(self.Inner.Min.X, point.Y, self.Inner.Max.X,
 			point.Y+height)
-		self.Rows[row].Draw(buf, self.SelectedRow == row)
+		if self.Rows[row].Img != nil {
+			self.Rows[row].drawImage(buf)
+		} else {
+			self.Rows[row].draw(buf, self.SelectedRow == row)
+		}
 		point.Y += height
 	}
 
