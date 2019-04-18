@@ -139,6 +139,9 @@ func (self *ImageList) SelectedLine() int {
 
 func (self *ImageList) TopLine() int {
 	height := 0
+	if len(self.Rows) == 0 {
+		return height
+	}
 	for _, row := range self.Rows[:self.topRow] {
 		height += row.GetHeight()
 	}
@@ -147,6 +150,10 @@ func (self *ImageList) TopLine() int {
 
 func (self *ImageList) convertRowToLine(rowNum int) int {
 	height := 0
+	//fmt.Println(rowNum)
+	if len(self.Rows) == 0 {
+		return 0
+	}
 	for _, row := range self.Rows[:rowNum+1] {
 		height += row.GetHeight()
 	}
@@ -176,6 +183,10 @@ func (self *ImageList) Draw(buf *Buffer) {
 		self.topRow = self.convertLineToRow(topLine)
 	} else if self.SelectedRow < self.topRow {
 		self.topRow = self.SelectedRow
+	}
+
+	if len(self.Rows) == 0 {
+		return
 	}
 
 	// draw rows
