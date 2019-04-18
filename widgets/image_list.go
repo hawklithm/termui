@@ -142,6 +142,9 @@ func (self *ImageList) TopLine() int {
 	if len(self.Rows) == 0 {
 		return height
 	}
+	if self.topRow > len(self.Rows) {
+		self.topRow = len(self.Rows)
+	}
 	for _, row := range self.Rows[:self.topRow] {
 		height += row.GetHeight()
 	}
