@@ -78,7 +78,13 @@ func (self *ImageListItem) calcImageSize() (width, height int, imgScale, whratio
 	return width, height, imgScale, whratio
 }
 
-func (self *ImageListItem) drawImage(buf *Buffer) {
+func (self *ImageListItem) drawImage(buf *Buffer, selected bool) {
+	if selected {
+		self.Border = true
+	} else {
+		self.Border = false
+	}
+	self.Block.Draw(buf)
 	img := self.Img
 	width, height, imgScale, whratio := self.calcImageSize()
 
@@ -98,8 +104,6 @@ func (self *ImageListItem) drawImage(buf *Buffer) {
 
 			buf.SetCell(Cell{Rune: '▄', Style: Style{Fg: colorDown - 1,
 				Bg: colorUp - 1}}, image.Point{X: x, Y: y}.Add(self.Inner.Min))
-
-			//termbox.SetCell(x, y, '▄', colorDown, colorUp)
 		}
 	}
 }
@@ -201,7 +205,7 @@ func (self *ImageList) Draw(buf *Buffer) {
 		self.Rows[row].SetRect(self.Inner.Min.X, point.Y, self.Inner.Max.X,
 			point.Y+height)
 		if self.Rows[row].Img != nil {
-			self.Rows[row].drawImage(buf)
+			self.Rows[row].drawImage(buf, self.SelectedRow == row)
 		} else {
 			self.Rows[row].draw(buf, self.SelectedRow == row)
 		}
