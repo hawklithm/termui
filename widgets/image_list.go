@@ -25,6 +25,7 @@ type ImageListItem struct {
 	Block
 	Text             string
 	Img              image.Image
+	Url              string
 	TextStyle        Style
 	WrapText         bool
 	SelectedRowStyle Style
