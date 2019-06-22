@@ -50,7 +50,7 @@ func main() {
 		log.Fatalf("failed to decode fetched image: %v", err)
 	}
 
-	z[2].Img = img
+	z[2].Img = &img
 	l.Rows = z
 	l.TextStyle = ui.NewStyle(ui.ColorYellow)
 	l.WrapText = false

@@ -69,7 +69,7 @@ func (self *ImageListItem) calcImageSize() (width, height int, imgScale, whratio
 	height = 40
 	whratio = DefaultRatio
 
-	bounds := img.Bounds()
+	bounds := (*img).Bounds()
 	imgW, imgH := bounds.Dx(), bounds.Dy()
 
 	imgScale = Scale(imgW, imgH, width, height, whratio)
@@ -97,10 +97,10 @@ func (self *ImageListItem) drawImage(buf *Buffer, selected bool) {
 			// doubling the resolution of the canvas.
 			startX, startY, endX, endY := ImgArea(x, y, imgScale, whratio)
 
-			r, g, b := AvgRGB(img, startX, startY, endX, (startY+endY)/2)
+			r, g, b := AvgRGB(*img, startX, startY, endX, (startY+endY)/2)
 			colorUp := Color(TermColor(r, g, b))
 
-			r, g, b = AvgRGB(img, startX, (startY+endY)/2, endX, endY)
+			r, g, b = AvgRGB(*img, startX, (startY+endY)/2, endX, endY)
 			colorDown := Color(TermColor(r, g, b))
 
 			buf.SetCell(Cell{Rune: '▄', Style: Style{Fg: colorDown - 1,
