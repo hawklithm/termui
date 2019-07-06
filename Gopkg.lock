@@ -10,12 +10,12 @@
   version = "v0.1.0"
 
 [[projects]]
-  branch = "image_draw"
-  digest = "1:7af641668c618d1247b5ca35027eb6c64539486dfa825d63cb15f68d11c00a4a"
+  branch = "master"
+  digest = "1:b9a8abe3242bbe88683888fc82897af926373b5af8668a5fcf11f6641cf4f4ef"
   name = "github.com/hawklithm/termbox-go"
   packages = ["."]
   pruneopts = "UT"
-  revision = "e70a581b097616c08023514b8de347862e09b5ed"
+  revision = "19456171586128fa539f6ab91e40d7a5e5511120"
 
 [[projects]]
   digest = "1:0356f3312c9bd1cbeda81505b7fd437501d8e778ab66998ef69f00d7f9b3a0d7"

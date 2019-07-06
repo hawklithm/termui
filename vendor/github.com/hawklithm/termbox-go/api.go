@@ -274,9 +274,9 @@ func SetImageCell(x, y int, bytes []byte) {
 
 	back_buffer.cells[y*back_buffer.width+x] = Cell{Type: IMAGE,
 		Bytes: bytes}
-	//for i := 1; i < IMAGE_WIDTH; i++ {
-	//	back_buffer.cells[y*back_buffer.width+x+i] = Cell{Type: IMAGE_PLACEHOLDER}
-	//}
+	for i := 1; i < IMAGE_WIDTH; i++ {
+		back_buffer.cells[y*back_buffer.width+x+i] = Cell{Type: IMAGE_PLACEHOLDER}
+	}
 	for j := 1; j < IMAGE_HEIGHT; j++ {
 		for i := 0; i < IMAGE_WIDTH; i++ {
 			back_buffer.cells[(y+j)*back_buffer.

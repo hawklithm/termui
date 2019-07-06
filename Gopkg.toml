@@ -38,7 +38,7 @@
   version = "1.0.0"
 
 [[constraint]]
-  branch = "image_draw"
+  branch = "master"
   name = "github.com/hawklithm/termbox-go"
 
 [prune]
