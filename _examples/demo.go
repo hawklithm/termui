@@ -44,7 +44,7 @@ func main() {
 		"[4] output.go",
 		"[5] random_out.go",
 		"[6] dashboard.go",
-		"[7] nsf/termbox-go",
+		"[7] hawklithm/termbox-go",
 	}
 
 	l := widgets.NewList()

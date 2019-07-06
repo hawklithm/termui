@@ -10,6 +10,14 @@
   version = "v0.1.0"
 
 [[projects]]
+  branch = "image_draw"
+  digest = "1:3e0cf804e61b9f3b548012aebf0095adebdfd02d5d7d702a1650c0692077dd32"
+  name = "github.com/hawklithm/termbox-go"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "f9f426085fe6d34d1806cf052a50229bd67388d2"
+
+[[projects]]
   digest = "1:0356f3312c9bd1cbeda81505b7fd437501d8e778ab66998ef69f00d7f9b3a0d7"
   name = "github.com/mattn/go-runewidth"
   packages = ["."]
@@ -25,22 +33,14 @@
   revision = "9e67c67572bc5dd02aef930e2b0ae3c02a4b5a5c"
   version = "v1.0.0"
 
-[[projects]]
-  branch = "master"
-  digest = "1:e4f1b6b3c33388b1f6f3d630280d9b0870c1e2f80379dfd2f89dd06425e9e6b9"
-  name = "github.com/nsf/termbox-go"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "288510b9734e30e7966ec2f22b87c5f8e67345e3"
-
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
     "github.com/cjbassi/drawille-go",
+    "github.com/hawklithm/termbox-go",
     "github.com/mattn/go-runewidth",
     "github.com/mitchellh/go-wordwrap",
-    "github.com/nsf/termbox-go",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

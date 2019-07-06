@@ -44,8 +44,8 @@ func NewBlock() *Block {
 }
 
 func (self *Block) drawBorder(buf *Buffer) {
-	verticalCell := Cell{VERTICAL_LINE, self.BorderStyle}
-	horizontalCell := Cell{HORIZONTAL_LINE, self.BorderStyle}
+	verticalCell := Cell{Rune: VERTICAL_LINE, Style: self.BorderStyle}
+	horizontalCell := Cell{Rune: HORIZONTAL_LINE, Style: self.BorderStyle}
 
 	// draw lines
 	if self.BorderTop {
@@ -63,16 +63,16 @@ func (self *Block) drawBorder(buf *Buffer) {
 
 	// draw corners
 	if self.BorderTop && self.BorderLeft {
-		buf.SetCell(Cell{TOP_LEFT, self.BorderStyle}, self.Min)
+		buf.SetCell(Cell{Rune: TOP_LEFT, Style: self.BorderStyle}, self.Min)
 	}
 	if self.BorderTop && self.BorderRight {
-		buf.SetCell(Cell{TOP_RIGHT, self.BorderStyle}, image.Pt(self.Max.X-1, self.Min.Y))
+		buf.SetCell(Cell{Rune: TOP_RIGHT, Style: self.BorderStyle}, image.Pt(self.Max.X-1, self.Min.Y))
 	}
 	if self.BorderBottom && self.BorderLeft {
-		buf.SetCell(Cell{BOTTOM_LEFT, self.BorderStyle}, image.Pt(self.Min.X, self.Max.Y-1))
+		buf.SetCell(Cell{Rune: BOTTOM_LEFT, Style: self.BorderStyle}, image.Pt(self.Min.X, self.Max.Y-1))
 	}
 	if self.BorderBottom && self.BorderRight {
-		buf.SetCell(Cell{BOTTOM_RIGHT, self.BorderStyle}, self.Max.Sub(image.Pt(1, 1)))
+		buf.SetCell(Cell{Rune: BOTTOM_RIGHT, Style: self.BorderStyle}, self.Max.Sub(image.Pt(1, 1)))
 	}
 }
 

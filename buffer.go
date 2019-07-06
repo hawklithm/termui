@@ -14,6 +14,7 @@ import (
 type Cell struct {
 	Rune  rune
 	Style Style
+	Bytes []byte
 }
 
 var CellClear = Cell{
@@ -70,7 +71,7 @@ func (self *Buffer) SetString(s string, style Style, p image.Point) {
 	runes := []rune(s)
 	x := 0
 	for _, char := range runes {
-		self.SetCell(Cell{char, style}, image.Pt(p.X+x, p.Y))
+		self.SetCell(Cell{Rune: char, Style: style}, image.Pt(p.X+x, p.Y))
 		x += rw.RuneWidth(char)
 	}
 }

@@ -5,7 +5,11 @@
 package widgets
 
 import (
+	"bytes"
+	"encoding/base64"
 	"image"
+	"image/png"
+	"os"
 	"strings"
 
 	. "github.com/hawklithm/termui"
@@ -24,11 +28,51 @@ type ImageList struct {
 type ImageListItem struct {
 	Block
 	Text             string
-	Img              *image.Image
+	img              image.Image
+	imgMatrix        []byte
 	Url              string
 	TextStyle        Style
 	WrapText         bool
 	SelectedRowStyle Style
+}
+
+func clip(origin image.Image) ([]byte, error) {
+	emptyBuff := bytes.NewBuffer(nil)
+	if err := png.Encode(emptyBuff, origin); err != nil {
+		return nil, err
+	}
+	//switch origin.(type) {
+	//case *image.YCbCr:
+	//	if err := jpeg.Encode(emptyBuff, origin, nil); err != nil {
+	//		return nil, err
+	//	}
+	//case *image.NRGBA:
+	//	if err := png.Encode(emptyBuff, origin); err != nil {
+	//		return nil, err
+	//	}
+	//case *image.RGBA:
+	//	if err := png.Encode(emptyBuff, origin); err != nil {
+	//		return nil, err
+	//	}
+	//case *image.Paletted:
+	//	if err := gif.Encode(emptyBuff, origin, &gif.Options{}); err != nil {
+	//		return nil, err
+	//	}
+	//}
+	dist := base64.StdEncoding.EncodeToString(emptyBuff.Bytes())
+	return []byte(dist), nil
+}
+
+func (l *ImageListItem) SetImage(origin image.Image) error {
+	if os.Getenv("WECHAT_TERM") == "iterm" {
+		var err error
+		if l.imgMatrix, err = clip(origin); err != nil {
+			return err
+		}
+	} else {
+		l.img = origin
+	}
+	return nil
 }
 
 func NewImageListItem() *ImageListItem {
@@ -50,7 +94,7 @@ func NewImageList() *ImageList {
 }
 
 func (self *ImageListItem) GetHeight() int {
-	if self.Img == nil {
+	if !self.hasImage() {
 		rows := strings.Split(self.Text, "\n")
 		return len(rows) + 2
 	} else {
@@ -61,15 +105,18 @@ func (self *ImageListItem) GetHeight() int {
 }
 
 func (self *ImageListItem) calcImageSize() (width, height int, imgScale, whratio float64) {
-	if self.Img == nil {
+	if os.Getenv("WECHAT_TERM") == "iterm" {
+		return 16, 4, 1, DefaultRatio
+	}
+	if !self.hasImage() {
 		return -1, -1, -1, 0
 	}
-	img := self.Img
+	img := self.img
 	width = 40
 	height = 40
 	whratio = DefaultRatio
 
-	bounds := (*img).Bounds()
+	bounds := img.Bounds()
 	imgW, imgH := bounds.Dx(), bounds.Dy()
 
 	imgScale = Scale(imgW, imgH, width, height, whratio)
@@ -86,7 +133,14 @@ func (self *ImageListItem) drawImage(buf *Buffer, selected bool) {
 		self.Border = false
 	}
 	self.Block.Draw(buf)
-	img := self.Img
+	if os.Getenv("WECHAT_TERM") == "iterm" {
+		matrix := self.imgMatrix
+		if matrix != nil {
+			buf.SetCell(Cell{Bytes: matrix}, image.Point{X: 1, Y: 0}.Add(self.Inner.Min))
+		}
+		return
+	}
+	img := self.img
 	width, height, imgScale, whratio := self.calcImageSize()
 
 	for y := 0; y < height; y++ {
@@ -97,10 +151,10 @@ func (self *ImageListItem) drawImage(buf *Buffer, selected bool) {
 			// doubling the resolution of the canvas.
 			startX, startY, endX, endY := ImgArea(x, y, imgScale, whratio)
 
-			r, g, b := AvgRGB(*img, startX, startY, endX, (startY+endY)/2)
+			r, g, b := AvgRGB(img, startX, startY, endX, (startY+endY)/2)
 			colorUp := Color(TermColor(r, g, b))
 
-			r, g, b = AvgRGB(*img, startX, (startY+endY)/2, endX, endY)
+			r, g, b = AvgRGB(img, startX, (startY+endY)/2, endX, endY)
 			colorDown := Color(TermColor(r, g, b))
 
 			buf.SetCell(Cell{Rune: '▄', Style: Style{Fg: colorDown - 1,
@@ -182,6 +236,10 @@ func (self *ImageList) convertLineToRow(line int) int {
 	return len(self.Rows)
 }
 
+func (self *ImageListItem) hasImage() bool {
+	return self.img != nil || self.imgMatrix != nil
+}
+
 func (self *ImageList) Draw(buf *Buffer) {
 	self.Block.Draw(buf)
 
@@ -205,7 +263,7 @@ func (self *ImageList) Draw(buf *Buffer) {
 		height := self.Rows[row].GetHeight()
 		self.Rows[row].SetRect(self.Inner.Min.X, point.Y, self.Inner.Max.X,
 			point.Y+height)
-		if self.Rows[row].Img != nil {
+		if self.Rows[row].hasImage() {
 			self.Rows[row].drawImage(buf, self.SelectedRow == row)
 		} else {
 			self.Rows[row].draw(buf, self.SelectedRow == row)

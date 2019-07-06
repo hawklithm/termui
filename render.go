@@ -6,9 +6,11 @@ package termui
 
 import (
 	"image"
+	"log"
+	"os"
 	"sync"
 
-	tb "github.com/nsf/termbox-go"
+	tb "github.com/hawklithm/termbox-go"
 )
 
 type Drawable interface {
@@ -19,6 +21,10 @@ type Drawable interface {
 }
 
 func Render(items ...Drawable) {
+	fileName := "log.txt"
+	logFile, _ := os.OpenFile(fileName, os.O_CREATE|os.O_APPEND|os.O_RDWR, 0666)
+	wxLogger := log.New(logFile, "[*]", log.LstdFlags)
+	defer logFile.Close()
 	for _, item := range items {
 		buf := NewBuffer(item.GetRect())
 		item.Lock()
@@ -26,6 +32,13 @@ func Render(items ...Drawable) {
 		item.Unlock()
 		for point, cell := range buf.CellMap {
 			if point.In(buf.Rectangle) {
+				if os.Getenv("WECHAT_TERM") == "iterm" {
+					if cell.Bytes != nil {
+						tb.SetImageCell(point.X, point.Y, cell.Bytes)
+						wxLogger.Println("image point", point)
+						continue
+					}
+				}
 				tb.SetCell(
 					point.X, point.Y,
 					cell.Rune,

@@ -108,7 +108,7 @@ func ParseStyles(s string, defaultStyle Style) []Cell {
 				squareCount = 1
 				styledText = append(styledText, _rune)
 			} else {
-				cells = append(cells, Cell{_rune, defaultStyle})
+				cells = append(cells, Cell{Rune: _rune, Style: defaultStyle})
 			}
 		case parserStateStyledText:
 			switch {
@@ -125,7 +125,7 @@ func ParseStyles(s string, defaultStyle Style) []Cell {
 						squareCount = 1
 						styleItems = append(styleItems, _rune)
 					default:
-						cells = append(cells, Cell{_rune, defaultStyle})
+						cells = append(cells, Cell{Rune: _rune, Style: defaultStyle})
 					}
 				}
 			case len(runes) == i+1:

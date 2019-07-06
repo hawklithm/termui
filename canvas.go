@@ -3,7 +3,7 @@ package termui
 import (
 	"image"
 
-	drawille "github.com/cjbassi/drawille-go"
+	"github.com/cjbassi/drawille-go"
 )
 
 type Canvas struct {
@@ -30,8 +30,8 @@ func (self *Canvas) Draw(buf *Buffer) {
 	for point, cell := range self.Canvas.GetCells() {
 		if point.In(self.Rectangle) {
 			convertedCell := Cell{
-				cell.Rune,
-				Style{
+				Rune: cell.Rune,
+				Style: Style{
 					Color(cell.Color),
 					ColorClear,
 					ModifierClear,

@@ -161,9 +161,9 @@ func WrapCells(cells []Cell, width uint) []Cell {
 	i := 0
 	for _, _rune := range wrapped {
 		if _rune == '\n' {
-			wrappedCells = append(wrappedCells, Cell{_rune, StyleClear})
+			wrappedCells = append(wrappedCells, Cell{Rune: _rune, Style: StyleClear})
 		} else {
-			wrappedCells = append(wrappedCells, Cell{_rune, cells[i].Style})
+			wrappedCells = append(wrappedCells, Cell{Rune: _rune, Style: cells[i].Style})
 		}
 		i++
 	}
@@ -173,7 +173,7 @@ func WrapCells(cells []Cell, width uint) []Cell {
 func RunesToStyledCells(runes []rune, style Style) []Cell {
 	cells := []Cell{}
 	for _, _rune := range runes {
-		cells = append(cells, Cell{_rune, style})
+		cells = append(cells, Cell{Rune: _rune, Style: style})
 	}
 	return cells
 }
@@ -192,7 +192,7 @@ func TrimCells(cells []Cell, w int) []Cell {
 	runes := []rune(s)
 	newCells := []Cell{}
 	for i, r := range runes {
-		newCells = append(newCells, Cell{r, cells[i].Style})
+		newCells = append(newCells, Cell{Rune: r, Style: cells[i].Style})
 	}
 	return newCells
 }

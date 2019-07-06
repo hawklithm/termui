@@ -7,7 +7,7 @@ package termui
 import (
 	"fmt"
 
-	tb "github.com/nsf/termbox-go"
+	tb "github.com/hawklithm/termbox-go"
 )
 
 /*

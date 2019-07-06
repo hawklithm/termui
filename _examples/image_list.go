@@ -31,6 +31,15 @@ func main() {
 		"[4] output.go",
 		"[5] random_out.go",
 		"[6] dashboard.go",
+		"[6] dashboard.go",
+		"[6] dashboard.go",
+		"[6] dashboard.go",
+		"[6] dashboard.go",
+		"[6] dashboard.go",
+		"[6] dashboard.go",
+		"[6] dashboard.go",
+		"[6] dashboard.go",
+		"[6] dashboard.go",
 		"[7] foo",
 		"[8] bar",
 		"[9] baz",
@@ -50,7 +59,7 @@ func main() {
 		log.Fatalf("failed to decode fetched image: %v", err)
 	}
 
-	z[2].Img = &img
+	z[2].SetImage(img)
 	l.Rows = z
 	l.TextStyle = ui.NewStyle(ui.ColorYellow)
 	l.WrapText = false
