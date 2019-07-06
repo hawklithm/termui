@@ -6,7 +6,6 @@ package termui
 
 import (
 	"image"
-	"log"
 	"os"
 	"sync"
 
@@ -21,21 +20,17 @@ type Drawable interface {
 }
 
 func Render(items ...Drawable) {
-	fileName := "log.txt"
-	logFile, _ := os.OpenFile(fileName, os.O_CREATE|os.O_APPEND|os.O_RDWR, 0666)
-	wxLogger := log.New(logFile, "[*]", log.LstdFlags)
-	defer logFile.Close()
 	for _, item := range items {
 		buf := NewBuffer(item.GetRect())
 		item.Lock()
 		item.Draw(buf)
 		item.Unlock()
+		imageMap := make(map[image.Point]Cell)
 		for point, cell := range buf.CellMap {
 			if point.In(buf.Rectangle) {
 				if os.Getenv("WECHAT_TERM") == "iterm" {
-					if cell.Bytes != nil {
-						tb.SetImageCell(point.X, point.Y, cell.Bytes)
-						wxLogger.Println("image point", point)
+					if cell.Bytes != nil && len(cell.Bytes) > 0 {
+						imageMap[point] = cell
 						continue
 					}
 				}
@@ -44,6 +39,11 @@ func Render(items ...Drawable) {
 					cell.Rune,
 					tb.Attribute(cell.Style.Fg+1)|tb.Attribute(cell.Style.Modifier), tb.Attribute(cell.Style.Bg+1),
 				)
+			}
+		}
+		if os.Getenv("WECHAT_TERM") == "iterm" {
+			for point, cell := range imageMap {
+				tb.SetImageCell(point.X, point.Y, cell.Bytes)
 			}
 		}
 	}

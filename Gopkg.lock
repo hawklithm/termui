@@ -11,11 +11,11 @@
 
 [[projects]]
   branch = "image_draw"
-  digest = "1:3e0cf804e61b9f3b548012aebf0095adebdfd02d5d7d702a1650c0692077dd32"
+  digest = "1:7af641668c618d1247b5ca35027eb6c64539486dfa825d63cb15f68d11c00a4a"
   name = "github.com/hawklithm/termbox-go"
   packages = ["."]
   pruneopts = "UT"
-  revision = "f9f426085fe6d34d1806cf052a50229bd67388d2"
+  revision = "e70a581b097616c08023514b8de347862e09b5ed"
 
 [[projects]]
   digest = "1:0356f3312c9bd1cbeda81505b7fd437501d8e778ab66998ef69f00d7f9b3a0d7"

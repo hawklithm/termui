@@ -132,10 +132,10 @@ func (self *ImageListItem) drawImage(buf *Buffer, selected bool) {
 	} else {
 		self.Border = false
 	}
-	self.Block.Draw(buf)
+	defer self.Block.Draw(buf)
 	if os.Getenv("WECHAT_TERM") == "iterm" {
 		matrix := self.imgMatrix
-		if matrix != nil {
+		if self.hasImage() {
 			buf.SetCell(Cell{Bytes: matrix}, image.Point{X: 1, Y: 0}.Add(self.Inner.Min))
 		}
 		return
@@ -237,7 +237,7 @@ func (self *ImageList) convertLineToRow(line int) int {
 }
 
 func (self *ImageListItem) hasImage() bool {
-	return self.img != nil || self.imgMatrix != nil
+	return self.img != nil || (self.imgMatrix != nil && len(self.imgMatrix) != 0)
 }
 
 func (self *ImageList) Draw(buf *Buffer) {
